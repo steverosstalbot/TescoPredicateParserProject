@@ -2,6 +2,7 @@
 
 package org.tesco.tps.predicategrammar;
 import java.util.HashMap;
+import org.tesco.tps.filterhandler.RegisterSingleton;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -55,10 +56,7 @@ public class TescoFilterGrammarParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	/** Map variable name to objects holding some value */
-	public static HashMap resources = new HashMap(); 	// resource against filter list
-	public static HashMap usermemory = new HashMap(); 	// unbound variables
-	public static HashMap jsonmemory = new HashMap(); 	// unbound JSON variables
+
 
 	public TescoFilterGrammarParser(TokenStream input) {
 		super(input);
@@ -169,8 +167,8 @@ public class TescoFilterGrammarParser extends Parser {
 			 
 					{
 						//System.out.println("-->filterset <" + (((FiltersetContext)_localctx).RPATH!=null?((FiltersetContext)_localctx).RPATH.getText():null) + ">"); 
-						resources.put((((FiltersetContext)_localctx).RPATH!=null?((FiltersetContext)_localctx).RPATH.getText():null), new String("TO BE RESOLVED AGAINST JSON INBOUND DOC"));
-						//System.out.println("--->resource count: " + resources.size());
+						RegisterSingleton.getRegisters().getResourceVars().put((((FiltersetContext)_localctx).RPATH!=null?((FiltersetContext)_localctx).RPATH.getText():null), new String("TO BE RESOLVED AGAINST JSON INBOUND DOC"));
+						//System.out.println("--->resource count: " + RegisterSingleton.getRegisters().getResourceVars().size());
 					}
 					// What we want to add to this is a list of filter expressions
 				
@@ -510,9 +508,9 @@ public class TescoFilterGrammarParser extends Parser {
 
 								{ 
 									//System.out.println("-->VAR");
-									usermemory.put((((AtomContext)_localctx).VAR!=null?((AtomContext)_localctx).VAR.getText():null).substring(1,(((AtomContext)_localctx).VAR!=null?((AtomContext)_localctx).VAR.getText():null).length()-1), new String("TO BE BOUND FROM USER CONTEXT"));
+									RegisterSingleton.getRegisters().getUserContextVars().put((((AtomContext)_localctx).VAR!=null?((AtomContext)_localctx).VAR.getText():null).substring(1,(((AtomContext)_localctx).VAR!=null?((AtomContext)_localctx).VAR.getText():null).length()-1), new String("TO BE BOUND FROM USER CONTEXT"));
 									//System.out.println("--->" + (((AtomContext)_localctx).VAR!=null?((AtomContext)_localctx).VAR.getText():null));
-									//System.out.println("--->usermemory count: " + usermemory.size());
+									//System.out.println("--->usermemory count: " + RegisterSingleton.getRegisters().getUserContextVars().size());
 								}
 							
 				}
@@ -524,9 +522,9 @@ public class TescoFilterGrammarParser extends Parser {
 
 								{ 
 									//System.out.println("-->ID");
-									jsonmemory.put((((AtomContext)_localctx).PATH!=null?((AtomContext)_localctx).PATH.getText():null), new String("TO BE BOUND TO THE INCOMING JSON DOC"));
+									RegisterSingleton.getRegisters().getJSONVars().put((((AtomContext)_localctx).PATH!=null?((AtomContext)_localctx).PATH.getText():null), new String("TO BE BOUND TO THE INCOMING JSON DOC"));
 									//System.out.println("--->" + (((AtomContext)_localctx).PATH!=null?((AtomContext)_localctx).PATH.getText():null));
-									//System.out.println("--->jsonmemory count: " + jsonmemory.size());
+									//System.out.println("--->jsonmemory count: " + RegisterSingleton.getRegisters().getJSONVars().size());
 								}
 							
 				}

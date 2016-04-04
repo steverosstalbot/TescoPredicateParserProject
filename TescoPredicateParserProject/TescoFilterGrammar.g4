@@ -1,5 +1,5 @@
 //
-// Antlr grammar for Tesco tps filtering
+// Antlr grammar for Tesco tps filtering 
 //
 
 grammar TescoFilterGrammar;
@@ -7,14 +7,12 @@ grammar TescoFilterGrammar;
 @header {
 package org.tesco.tps.predicategrammar;
 import java.util.HashMap;
+import org.tesco.tps.filterhandler.RegisterSingleton;
 }
 
 
 @members {
-/** Map variable name to objects holding some value */
-public static HashMap resources = new HashMap(); 	// resource against filter list
-public static HashMap usermemory = new HashMap(); 	// unbound variables
-public static HashMap jsonmemory = new HashMap(); 	// unbound JSON variables
+
 }
 
     ALLOW : 'ALLOW';
@@ -50,8 +48,8 @@ filterset: RPATH CONTEXTSEP ( filter )+
 	{ 
 		{
 			//System.out.println("-->filterset <" + $RPATH.text + ">"); 
-			resources.put($RPATH.text, new String("TO BE RESOLVED AGAINST JSON INBOUND DOC"));
-			//System.out.println("--->resource count: " + resources.size());
+			RegisterSingleton.getRegisters().getResourceVars().put($RPATH.text, new String("TO BE RESOLVED AGAINST JSON INBOUND DOC"));
+			//System.out.println("--->resource count: " + RegisterSingleton.getRegisters().getResourceVars().size());
 		}
 		// What we want to add to this is a list of filter expressions
 	}
@@ -70,17 +68,17 @@ term : atom (operator atom)? | LPAREN expression RPAREN;
 atom : VAR 	{
 				{ 
 					//System.out.println("-->VAR");
-					usermemory.put($VAR.text.substring(1,$VAR.text.length()-1), new String("TO BE BOUND FROM USER CONTEXT"));
+					RegisterSingleton.getRegisters().getUserContextVars().put($VAR.text.substring(1,$VAR.text.length()-1), new String("TO BE BOUND FROM USER CONTEXT"));
 					//System.out.println("--->" + $VAR.text);
-					//System.out.println("--->usermemory count: " + usermemory.size());
+					//System.out.println("--->usermemory count: " + RegisterSingleton.getRegisters().getUserContextVars().size());
 				}
 			}
 		| PATH {
 				{ 
 					//System.out.println("-->ID");
-					jsonmemory.put($PATH.text, new String("TO BE BOUND TO THE INCOMING JSON DOC"));
+					RegisterSingleton.getRegisters().getJSONVars().put($PATH.text, new String("TO BE BOUND TO THE INCOMING JSON DOC"));
 					//System.out.println("--->" + $PATH.text);
-					//System.out.println("--->jsonmemory count: " + jsonmemory.size());
+					//System.out.println("--->jsonmemory count: " + RegisterSingleton.getRegisters().getJSONVars().size());
 				}
 			}
 		

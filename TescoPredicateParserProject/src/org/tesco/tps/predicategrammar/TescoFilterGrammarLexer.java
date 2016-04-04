@@ -2,6 +2,7 @@
 
 package org.tesco.tps.predicategrammar;
 import java.util.HashMap;
+import org.tesco.tps.filterhandler.RegisterSingleton;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -44,10 +45,7 @@ public class TescoFilterGrammarLexer extends Lexer {
 	};
 
 
-	/** Map variable name to objects holding some value */
-	public static HashMap resources = new HashMap(); 	// resource against filter list
-	public static HashMap usermemory = new HashMap(); 	// unbound variables
-	public static HashMap jsonmemory = new HashMap(); 	// unbound JSON variables
+
 
 
 	public TescoFilterGrammarLexer(CharStream input) {

@@ -2,6 +2,7 @@
 
 package org.tesco.tps.predicategrammar;
 import java.util.HashMap;
+import org.tesco.tps.filterhandler.RegisterSingleton;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
