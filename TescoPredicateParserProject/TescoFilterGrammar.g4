@@ -39,10 +39,10 @@ import org.tesco.tps.filterhandler.RegisterSingleton;
     CONTEXTSEP : '->';
 
 ruleset : ( filterset )+ EOF;
-	// What we should end up with is an executable table by resource
-	// of filters to be executed.
-	// When we run through the table we bind the context to the
-	// unbound "{VARIABLES}" and then run through and execute.
+	// What  we should end up  with is an executable table by resource
+	// of filters to be executed. 
+	// When we run through the   table we bind the context to the
+	// unbound "{VARIABLES}" and  then run through and execute.
 
 filterset: RPATH CONTEXTSEP ( filter )+
 	{ 

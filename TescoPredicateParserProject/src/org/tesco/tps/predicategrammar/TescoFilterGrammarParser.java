@@ -82,6 +82,11 @@ public class TescoFilterGrammarParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitRuleset(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitRuleset(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final RulesetContext ruleset() throws RecognitionException {
@@ -139,6 +144,11 @@ public class TescoFilterGrammarParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitFilterset(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitFilterset(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -203,6 +213,11 @@ public class TescoFilterGrammarParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitFilter(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitFilter(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FilterContext filter() throws RecognitionException {
@@ -249,6 +264,11 @@ public class TescoFilterGrammarParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitExpression(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitExpression(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -293,6 +313,11 @@ public class TescoFilterGrammarParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitOr_expression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitOr_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -353,6 +378,11 @@ public class TescoFilterGrammarParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitAnd_expression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitAnd_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -417,6 +447,11 @@ public class TescoFilterGrammarParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitTerm(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitTerm(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -492,6 +527,11 @@ public class TescoFilterGrammarParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitAtom(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitAtom(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -593,6 +633,11 @@ public class TescoFilterGrammarParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof TescoFilterGrammarListener ) ((TescoFilterGrammarListener)listener).exitOperator(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof TescoFilterGrammarVisitor ) return ((TescoFilterGrammarVisitor<? extends T>)visitor).visitOperator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

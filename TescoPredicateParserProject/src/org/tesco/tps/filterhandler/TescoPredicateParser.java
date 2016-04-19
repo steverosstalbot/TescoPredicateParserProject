@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
+
+import com.fasterxml.jackson.core.json.*;
+
 //import org.tesco.util.predicategrammar.*;
 
 public class TescoPredicateParser 
@@ -21,19 +24,27 @@ public class TescoPredicateParser
 	// For example "tesco:tps:Contract" specifies tesco as a domain
 	// tps as a source and Contract as a document type.
 	//
-	
+
 	private String m_filters[] = 	{
-									"tesco:tps:Contract -> ALLOW ContractDetails.Price > 500.00 and ContractDetails.Price < 10000; DENY ContractDetails.Price < 10000.00;",
-									"tesco:tps:Company -> DENY CompanyDetails.CompanyNumber != {Company.CompanyNumber};",
+									"tesco:tps:Contract -> ALLOW ContractDetails.Price > 500.00 and ContractDetails.Price < 10000;",
+	};
+	/*
+									"tesco:tps:Company -> DENY CompanyDetails.CompanyNumber != {Company.CompanyNumber};"
 									"tesco:tps:User -> ALLOW {User.lastName} == 'Ross-Talbot';",
 									"tesco:tps:ProductHierary -> ALLOW ProductDetails.ProductCategory == {User.AutorizationCategory};"
 	};
+	*/
+	
 	private String 		m_inboundDoc = "INBOUND";
 	private String 		m_outboundDoc = "OUTBOUND";
 	private UserContext m_userContext = null;
 	
 	private Set<String> m_userMemory = null;
 	private Set<String> m_jsonMemory = null;
+	
+	private TescoFilterGrammarParser	m_parser = null;
+	
+	
 	
 	public TescoPredicateParser()
 	{
@@ -48,7 +59,12 @@ public class TescoPredicateParser
 	public UserContext getUserContext() { return m_userContext; }
 	public String getInboundDoc() { return m_inboundDoc; }
 	public String getOutboundDoc() { return m_outboundDoc; }
+	public TescoFilterGrammarParser getParser() { return m_parser; }
 	
+	public void setParser(TescoFilterGrammarParser p)
+	{
+		m_parser = p;
+	}
 	public void setFilters(String[] f)
 	{
 		m_filters = f;
@@ -72,10 +88,9 @@ public class TescoPredicateParser
     public static void main( String[] args) throws Exception 
     {
     	System.out.println("START");
-
-    	TescoPredicateParser parser = new TescoPredicateParser();
-    	parser.setOutboundDoc(parser.filter(parser.getUserContext(), parser.getInboundDoc(), parser.getFilters()));
-    	
+    	TescoPredicateParser parseExpression = new TescoPredicateParser();
+    	parseExpression.filter(parseExpression.getUserContext(), parseExpression.getInboundDoc(), parseExpression.getFilters());
+    	parseExpression.setOutboundDoc(parseExpression.filter(parseExpression.getUserContext(), parseExpression.getInboundDoc(), parseExpression.getFilters()));
     	System.out.println("END");
     }
     
@@ -86,34 +101,21 @@ public class TescoPredicateParser
     public String filter(UserContext uc, String inboundDoc, String[] filters)
     {
     	String outboundDoc = inboundDoc;
-    	
+    	ParseTree tree = null;
+    	String queryToRun = "";
     	try 
     	{
 	    	for (int i=0; (i < filters.length); i++)
 	    	{
+	    		tree = parseExpression(filters[i]);
+	    		bind(tree,uc);
+	    		queryToRun = translate(tree);
+	    		System.out.println("Apply query \n\t" + queryToRun + "\n to JSON doc");
 	    		
-	    		parse(filters[i]);
-	    		
-	    		// - this needs refactoring into something more sensible
-	    		// Bind anything in usermemory - declared in the g4 grammar and visible as a variable of the generated grammar
-	    		// 
-	    		Iterator<String> iter;
-	    		int j = 0;
-	    		Object obj = null;
-	    		String memorycell = null;
-
-	    		m_userMemory = RegisterSingleton.getRegisters().getUserContextVars().keySet();
-	    		for (iter = m_userMemory.iterator(); (iter.hasNext());)
-	    		{
-	    			memorycell = iter.next();
-	    			obj = bind(memorycell,uc);
-	    			RegisterSingleton.getRegisters().getUserContextVars().replace(memorycell, obj);
-	    		}
-	    		reportOnMemory("UserContext", RegisterSingleton.getRegisters().getUserContextVars());
-	    		reportOnMemory("JSON", RegisterSingleton.getRegisters().getJSONVars());
-	    		reportOnMemory("Resources", RegisterSingleton.getRegisters().getResourceVars());
+	    		//reportOnMemory("UserContext", RegisterSingleton.getRegisters().getUserContextVars());
+	    		//reportOnMemory("JSON", RegisterSingleton.getRegisters().getJSONVars());
+	    		//reportOnMemory("Resources", RegisterSingleton.getRegisters().getResourceVars());
 	    	} 	
-	    	evaluate();
 	    	return outboundDoc;
     	}
     	catch (Exception e)
@@ -122,6 +124,33 @@ public class TescoPredicateParser
     		e.printStackTrace();
     	}
     	return outboundDoc;
+    }
+    
+    private String isJsonPathMatch(String jsonInputString, String jsonQuery) 
+    {
+    	String jsonOutputString = jsonInputString;
+    	//JsonPath.read(json, jsonPath, filters)
+ //   	 JsonNode jsonOutput = JsonPath.read(jsonQuery, jsonInputString, JsonNode.class);
+ //   	 jsonOutputString = jsonOutput.toString();
+    	 return jsonOutputString;
+    }
+     
+    
+    // Bind user context stuff to any VAR's that we find in the tree
+    public void bind(ParseTree t, UserContext uc)
+    { 
+		Iterator<String> iter;
+		int j = 0;
+		Object obj = null;
+		String memorycell = null;
+
+		m_userMemory = RegisterSingleton.getRegisters().getUserContextVars().keySet();
+		for (iter = m_userMemory.iterator(); (iter.hasNext());)
+		{
+			memorycell = iter.next();
+			obj = bind(memorycell,uc);
+			RegisterSingleton.getRegisters().getUserContextVars().replace(memorycell, obj);
+		}
     }
     
     private void reportOnMemory(String s, HashMap h)
@@ -136,7 +165,7 @@ public class TescoPredicateParser
 		for (iter = m_userMemory.iterator(); (iter.hasNext());)
 		{
 			key = iter.next();
-			System.out.println(s + "[" + (j++) + "] -> [" + h.get(key) + "," + obj + "]");
+			System.out.println(s + "[" + key + "] -> [" + h.get(key) + "]");
 		}
 
 		System.out.println("Entries for " + s + ": " + h.size());
@@ -147,8 +176,9 @@ public class TescoPredicateParser
     //
     // Parses a filter
     //
-    private void parse(String f)
+    private ParseTree parseExpression(String f)
     {
+    	ParseTree	tree = null;
     	try
     	{
 			System.out.println("Running for filter <" + f + ">");
@@ -164,16 +194,18 @@ public class TescoPredicateParser
 			// Tidy this bit up so that we don't swap from Hash to keySet
 			//
 			TescoFilterGrammarParser parser = new TescoFilterGrammarParser(tokens);
-			ParseTree tree = parser.ruleset(); 							// begin parsing at rule 'ruleset'
-			System.out.println("Parse tree:");
-			System.out.println(tree.toStringTree(parser)); 				// print LISP-style tree
-			System.out.println("");
+			setParser(parser);
+
+			tree = parser.ruleset(); 							// begin parsing at rule 'ruleset'
+			
+			return tree;
     	}
     	catch (Exception e)
     	{
     		System.out.println("Exception thrown in parse method");
     		e.printStackTrace();
     	}
+    	return tree;
     }
     
     //
@@ -256,10 +288,13 @@ public class TescoPredicateParser
     	return obj;
     }
     
-    private void evaluate()
+	// Translates filter to JSON PATH
+    public String translate(ParseTree tree)
     {
-    	// Should evaluate filters against JSON after parsing and binding and result in a new JSON doc
-    	
+    	String query = "";
+    	TescoPredicateParserVisitor vistor = new TescoPredicateParserVisitor();
+        query = vistor.visit(tree);
+        return query;
     }
     
     //
