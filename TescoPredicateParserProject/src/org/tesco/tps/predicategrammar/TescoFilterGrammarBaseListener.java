@@ -93,6 +93,18 @@ public class TescoFilterGrammarBaseListener implements TescoFilterGrammarListene
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAtom(@NotNull TescoFilterGrammarParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -100,18 +112,6 @@ public class TescoFilterGrammarBaseListener implements TescoFilterGrammarListene
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAtom(@NotNull TescoFilterGrammarParser.AtomContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

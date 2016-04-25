@@ -1,0 +1,95 @@
+	{ "tesco":
+	    [
+		{ "suppliers": 
+		    [
+			{ 
+				"companyname": "uniliver", 
+				"goods": {
+		    			"books": [ 
+		      					{ 
+									"category": "reference",
+		        					"author": "Nigel Rees",
+		        					"title": "Sayings of the Century",
+		        					"price": 8.95
+		      					},
+		      					{ 
+									"category": "fiction",
+		        					"author": "Evelyn Waugh",
+		        					"title": "Sword of Honour",
+		        					"price": 12.99
+		      					},
+		      					{ 
+									"category": "fiction",
+		        					"author": "Herman Melville",
+		        					"title": "Moby Dick",
+		        					"isbn": "0-553-21311-3",
+		        					"price": 8.99
+		      					},
+		      					{ 
+									"category": "fiction",
+		        					"author": "J. R. R. Tolkien",
+		        					"title": "The Lord of the Rings",
+		        					"isbn": "0-395-19395-8",
+		        					"price": 22.99
+		      					} ],
+		    			"bicycles": [
+							{
+									"make": "boardman",
+		      						"color": "red",
+		      						"price": 199.95
+		    				},
+							{
+									"make": "specialzed",
+		      						"color": "green",
+		      						"price": 299.95
+							} ]
+		  		}
+			},
+		
+			{ 
+				"companyname": "hovis", 
+				"goods": {
+		    			"bread": [ 
+		      					{ 
+									"flour": "white",
+		        					"type": "sliced",
+		        					"additions": "plain",
+		        					"price": 0.95,
+									"units": 1
+		      					},
+		      					{ 
+								"flour": "wholemeal",
+		        					"type": "whole",
+		        					"additions": "plain",
+		        					"price": 0.99,
+									"units": 1
+		      					},
+		      					{ 
+								"flour": "mixedgrain",
+		        					"type": "whole",
+		        					"additions": "fruit",
+		        					"price": 1.99,
+									"units": 1
+		      					} ],
+		    			"cakes": [
+		      					{ 
+									"topping": "icing",
+		        					"flour": "white",
+		        					"additions": "sprinkles",
+		        					"price": 1.25,
+									"units": 4
+		      					},
+		      					{ 
+									"topping": "sugar",
+		        					"flour": "white",
+		        					"additions": "cherry",
+		        					"price": 1.25,
+									"units": 6
+		      					}
+							]
+		  			}
+				}
+				]
+			}
+	    ]
+	}

@@ -15,6 +15,9 @@ import org.tesco.tps.filterhandler.RegisterSingleton;
 
 }
 
+	ALL : 'all';
+	WITHIN : 'within';
+	MATCH : 'matching';
     ALLOW : 'ALLOW';
     DENY : 'DENY';
     TRUE : 'true';
@@ -33,27 +36,18 @@ import org.tesco.tps.filterhandler.RegisterSingleton;
     RPATHSEP : ':';
     LBRACK : '[';
     RBRACK : ']';
+    QMARK : '?';
+    AT : '@';
     LPAREN : '(';
     RPAREN : ')';
     POUND : '£';
     CONTEXTSEP : '->';
 
-ruleset : ( filterset )+ EOF;
+ruleset : ( filter )+ EOF;
 	// What  we should end up  with is an executable table by resource
 	// of filters to be executed. 
 	// When we run through the   table we bind the context to the
 	// unbound "{VARIABLES}" and  then run through and execute.
-
-filterset: RPATH CONTEXTSEP ( filter )+
-	{ 
-		{
-			//System.out.println("-->filterset <" + $RPATH.text + ">"); 
-			RegisterSingleton.getRegisters().getResourceVars().put($RPATH.text, new String("TO BE RESOLVED AGAINST JSON INBOUND DOC"));
-			//System.out.println("--->resource count: " + RegisterSingleton.getRegisters().getResourceVars().size());
-		}
-		// What we want to add to this is a list of filter expressions
-	}
-;
 
 filter: (ALLOW | DENY) expression ';';
 
@@ -61,9 +55,12 @@ expression : or_expression;
 
 or_expression : and_expression (OR and_expression)*;
 
-and_expression : term (AND term)*;
+and_expression : (term | qualifiedterm) (AND (term | qualifiedterm))*;
 
-term : atom (operator atom)? | LPAREN expression RPAREN;
+term : (NOT)? atom | atom (operator atom)? | LPAREN expression RPAREN;
+
+qualifiedterm : WITHIN PATH MATCH term |
+				ALL PATH;
 
 atom : VAR 	{
 				{ 
@@ -96,9 +93,9 @@ CURRENCY : POUND FLOAT;
 STRING : '"' ('a'..'z'|'A'..'Z'|'_'|'-')* '"' |
 		 '\'' ('a'..'z'|'A'..'Z'|'_'|'-')* '\'';
 ID : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*;
-PATH : ( ID (PATHSEP PATH)* );									// This is not picking up the simple case of an ID.
-SPATH : ( ID SPATHSEP ID (SPATHSEP ID)* );
-RPATH : ( ID RPATHSEP ID (RPATHSEP ID)* );
+PATH :  ID ( '.' ID )*;									// This is not picking up the simple case of an ID.
+SPATH : ( ID (SPATHSEP ID)* );
+RPATH : ( ID (RPATHSEP ID)* );
 VAR : '{' PATH '}';
 
 SPACE :   [ \t]+ -> skip ;

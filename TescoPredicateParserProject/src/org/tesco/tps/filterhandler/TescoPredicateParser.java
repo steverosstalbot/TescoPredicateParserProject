@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.core.json.*;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.internal.filter.ValueNode.JsonNode;
 
 //import org.tesco.util.predicategrammar.*;
 
@@ -26,14 +28,9 @@ public class TescoPredicateParser
 	//
 
 	private String m_filters[] = 	{
-									"tesco:tps:Contract -> ALLOW ContractDetails.Price > 500.00 and ContractDetails.Price < 10000;",
+									"ALLOW  within books.y matching y.category == {User.autorizationCategory};",
+									"ALLOW within suppliers.y matching y.companyname == {Company.companyShortName};"
 	};
-	/*
-									"tesco:tps:Company -> DENY CompanyDetails.CompanyNumber != {Company.CompanyNumber};"
-									"tesco:tps:User -> ALLOW {User.lastName} == 'Ross-Talbot';",
-									"tesco:tps:ProductHierary -> ALLOW ProductDetails.ProductCategory == {User.AutorizationCategory};"
-	};
-	*/
 	
 	private String 		m_inboundDoc = "INBOUND";
 	private String 		m_outboundDoc = "OUTBOUND";
@@ -48,8 +45,8 @@ public class TescoPredicateParser
 	
 	public TescoPredicateParser()
 	{
-		setUserContext(new UserContext("123", "stevert", "Steve", "Ross-Talbot", "Cosmetics", "Buyer", "stalbot@thoughtworks.com",
-    			"TW", "ThoughtWorks Ltd", "999"));
+		setUserContext(new UserContext("123", "stevert", "Steve", "Ross-Talbot", "fiction", "Buyer", "stalbot@thoughtworks.com",
+    			"hovis", "Hovis", "999"));
 	}
 	
 	//
@@ -89,8 +86,11 @@ public class TescoPredicateParser
     {
     	System.out.println("START");
     	TescoPredicateParser parseExpression = new TescoPredicateParser();
+    	parseExpression.setInboundDoc(parseExpression.readFileIntoString( args[0] ));
     	parseExpression.filter(parseExpression.getUserContext(), parseExpression.getInboundDoc(), parseExpression.getFilters());
     	parseExpression.setOutboundDoc(parseExpression.filter(parseExpression.getUserContext(), parseExpression.getInboundDoc(), parseExpression.getFilters()));
+    	System.out.println("RESULT IS:");
+    	System.out.println(parseExpression.getOutboundDoc());
     	System.out.println("END");
     }
     
@@ -100,18 +100,23 @@ public class TescoPredicateParser
     //
     public String filter(UserContext uc, String inboundDoc, String[] filters)
     {
-    	String outboundDoc = inboundDoc;
+    	String outboundDoc = "";
     	ParseTree tree = null;
     	String queryToRun = "";
     	try 
     	{
 	    	for (int i=0; (i < filters.length); i++)
 	    	{
+	    		System.out.println("PARSING ... " + filters[i]);
 	    		tree = parseExpression(filters[i]);
+	    		System.out.println("BINDING ..." + filters[i]);
 	    		bind(tree,uc);
+	    		System.out.println("TRANSLATING ..." + filters[i]);
 	    		queryToRun = translate(tree);
-	    		System.out.println("Apply query \n\t" + queryToRun + "\n to JSON doc");
-	    		
+	    		//System.out.println("Apply query \n\t" + queryToRun + "\n to JSON doc" + inboundDoc );
+	    		//System.out.println("*****************");
+	    		System.out.println("RUNNING ... " + queryToRun);
+	    		 outboundDoc += filterJsonDoc(inboundDoc,queryToRun);
 	    		//reportOnMemory("UserContext", RegisterSingleton.getRegisters().getUserContextVars());
 	    		//reportOnMemory("JSON", RegisterSingleton.getRegisters().getJSONVars());
 	    		//reportOnMemory("Resources", RegisterSingleton.getRegisters().getResourceVars());
@@ -126,12 +131,24 @@ public class TescoPredicateParser
     	return outboundDoc;
     }
     
-    private String isJsonPathMatch(String jsonInputString, String jsonQuery) 
+    private String filterJsonDoc(String jsonInputString, String jsonQuery) 
     {
-    	String jsonOutputString = jsonInputString;
-    	//JsonPath.read(json, jsonPath, filters)
- //   	 JsonNode jsonOutput = JsonPath.read(jsonQuery, jsonInputString, JsonNode.class);
- //   	 jsonOutputString = jsonOutput.toString();
+	 //   	System.out.println("filterJsonDoc using " + jsonQuery);
+	    	//System.out.println("Against\n" + jsonInputString + "END");
+	    	String jsonOutputString = "";
+	    	try
+	    	{
+	    		//JsonPath.read(json, jsonPath, filters)
+	   	 
+	    		//List<Object> results = JsonPath.read(jsonInputString, "$..labels[?(@.name==\"bug\")]");
+	    		//List<Object> results = JsonPath.read(jsonInputString, "$..suppliers[?(@.companyname == 'hovis')]");
+	    		List<Object> results = JsonPath.read(jsonInputString, jsonQuery);
+
+	    		for (int i = 0; (i < results.size()); i++)
+	    			jsonOutputString += results.get(i) + "\n";
+	    	} catch (Exception e) {
+	    		e.printStackTrace();
+	    	}
     	 return jsonOutputString;
     }
      
@@ -309,4 +326,25 @@ public class TescoPredicateParser
     	String beanMethodName = new String("get" + in.substring(0, 1).toUpperCase() + in.substring(1));
     	return beanMethodName;
     }
+    
+	private String readFileIntoString( String file ) throws IOException 
+	{
+	    BufferedReader reader = new BufferedReader( new FileReader (file));
+	    String         line = null;
+	    StringBuilder  stringBuilder = new StringBuilder();
+	    String         ls = System.getProperty("line.separator");
+	    try 
+	    {
+	        while( ( line = reader.readLine() ) != null ) 
+	        {
+	            stringBuilder.append( line );
+	            stringBuilder.append( ls );
+	        }
+	        return stringBuilder.toString();
+	    } 
+	    finally 
+	    {
+	        reader.close();
+	    }
+	}
 }

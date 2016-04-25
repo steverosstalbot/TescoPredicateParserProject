@@ -73,6 +73,16 @@ public interface TescoFilterGrammarListener extends ParseTreeListener {
 	 */
 	void exitTerm(@NotNull TescoFilterGrammarParser.TermContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TescoFilterGrammarParser#qualifiedterm}.
+	 * @param ctx the parse tree
+	 */
+	void enterQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TescoFilterGrammarParser#qualifiedterm}.
+	 * @param ctx the parse tree
+	 */
+	void exitQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TescoFilterGrammarParser#atom}.
 	 * @param ctx the parse tree
 	 */
@@ -82,16 +92,6 @@ public interface TescoFilterGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAtom(@NotNull TescoFilterGrammarParser.AtomContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TescoFilterGrammarParser#filterset}.
-	 * @param ctx the parse tree
-	 */
-	void enterFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TescoFilterGrammarParser#filterset}.
-	 * @param ctx the parse tree
-	 */
-	void exitFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TescoFilterGrammarParser#operator}.
 	 * @param ctx the parse tree

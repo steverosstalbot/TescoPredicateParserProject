@@ -28,11 +28,11 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 	 */
 	public String visitOr_expression(@NotNull TescoFilterGrammarParser.Or_expressionContext ctx)
 	{
-		String s = " || ";
+		String s = "";
 
 		if (ctx.getChildCount() == 1)
 			return s = visit(ctx.getChild(0));
-		for (int i = 0; (i < ctx.getChildCount()); i++)
+		for (int i = 0; (i < ctx.getChildCount()); i+=2)
 		{
 			if (i == ctx.getChildCount()-1)
 				s += visit(ctx.getChild(i));
@@ -48,7 +48,7 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 	 */
 	public String visitExpression(@NotNull TescoFilterGrammarParser.ExpressionContext ctx)
 	{
-		String s = " $."; 							// Root in JSONPath
+		String s = ""; 							// Root in JSONPath
 		for (int i = 0; (i < ctx.getChildCount()); i++)
 		{
 			s += visit(ctx.getChild(i));
@@ -106,10 +106,45 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 	public String visitTerm(@NotNull TescoFilterGrammarParser.TermContext ctx)
 	{
 		String s = "";
+		int i = 0;
+		int n = 0;
+							// Skip over the "(" and ")"
+		if (ctx.getChild(0) == ctx.LPAREN())
+		{
+			i = 1;
+			n = ctx.getChildCount()-1;
+		} else {			// Or do not bother cos none there
+			n = ctx.getChildCount();
+		}
 
-		for (int i = 0; (i < ctx.getChildCount()); i++)
+		for (; (i < n); i++)
 		{
 			s += visit(ctx.getChild(i));
+		}
+		return s;
+	}
+	/**
+	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#term}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 * qualifiedterm : WITHIN atom LOOKFOR term
+	 *
+	 */
+	
+	//
+	// Crappy fix
+	//
+	public String visitQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx)
+	{
+		String s = "";
+		String path = ctx.getChild(1).getText();
+		if (ctx.ALL() != null)
+		{
+			s = "$.." + frigPathSuffix(path);
+			return s;
+		} else {
+			path = ctx.getChild(1).getText();
+			s = "$.." + frigPathSuffix(path) + "[?(" + visit(ctx.getChild(3)) + ")]";
 		}
 		return s;
 	}
@@ -127,7 +162,9 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 		if (ctx.VAR() != null)
 		{
 			System.out.println("Resolve " + ctx.getText());
-			s = RegisterSingleton.getRegisters().getUserContextVars().get(ctx.getText().substring(1,ctx.getText().length()-1)).toString();
+			// Default to string matching for now
+			s = "'" + RegisterSingleton.getRegisters().getUserContextVars().get(ctx.getText().substring(1,ctx.getText().length()-1)).toString() + "'";
+			System.out.println("Resolved to " + s);
 			//s = ctx.getText();
 		} else if (ctx.INT() != null) {
 			s = ctx.getText();
@@ -136,9 +173,15 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 		} else if (ctx.STRING() != null) {
 			s = ctx.getText();
 		} else if (ctx.PATH() != null) {
-			s = getCurrentRPATH().replaceAll(":", ".") + "." + ctx.getText().substring(0, ctx.getText().lastIndexOf(".")) +
-					"@" +
-					ctx.getText().substring(ctx.getText().lastIndexOf("."), ctx.getText().length());
+			// This is a paired hack. Since PATH doesn't work in the ANTLR grammar.
+			// When we have to match terms such as supplier with companyname we indicate it by
+			// adding a binding to the ends as such supplier.y y.companyname. The result being
+			// supplier.companyname
+			// If the PATH worked I wouldn't have to invent this crap
+			String prefix = "y.";
+			String path = ctx.getText();
+			path = frigPathPrefix(path);
+			s = "@." + path;
 		} else if (ctx.TRUE() != null) {
 			s = "true";
 		} else if (ctx.FALSE() != null) {
@@ -152,26 +195,7 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 		//}
 		return s;
 	}
-	/**
-	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#filterset}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	public String visitFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx)
-	{
-		// Should have 3 children as a set and multiple instance of 3.
-		String s = "";
 
-		for (int i = 0; (i < ctx.getChildCount()); i+=3)
-		{
-			setCurrentRPATH(ctx.getChild(i).getText());
-			if (ctx.getChildCount() > 3)
-				s += visit(ctx.getChild(i+2)) + " AS WELL AS \n";
-			else
-				s += visit(ctx.getChild(i+2));
-		}
-		return s;
-	}
 	/**
 	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#operator}.
 	 * @param ctx the parse tree
@@ -181,5 +205,22 @@ public class TescoPredicateParserVisitor extends TescoFilterGrammarBaseVisitor<S
 	{
 		String s = " " + ctx.getText() + " ";
 		return s;	
+	}
+	
+	public String frigPathSuffix(String s)
+	{
+		String suffix = ".y";
+		if (s.endsWith(suffix))
+			return s.substring(0, s.length()-suffix.length());
+		else
+			return s;
+	}
+	public String frigPathPrefix(String s)
+	{
+		String prefix = "y.";
+		if (s.startsWith(prefix))
+			return s.substring(prefix.length(), s.length());
+		else
+			return s;
 	}
 }

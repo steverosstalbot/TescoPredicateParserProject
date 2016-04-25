@@ -52,17 +52,17 @@ public interface TescoFilterGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTerm(@NotNull TescoFilterGrammarParser.TermContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#qualifiedterm}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#atom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAtom(@NotNull TescoFilterGrammarParser.AtomContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#filterset}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TescoFilterGrammarParser#operator}.
 	 * @param ctx the parse tree

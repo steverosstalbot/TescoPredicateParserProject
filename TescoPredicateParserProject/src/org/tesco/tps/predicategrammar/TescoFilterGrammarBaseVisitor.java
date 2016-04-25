@@ -64,14 +64,14 @@ public class TescoFilterGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAtom(@NotNull TescoFilterGrammarParser.AtomContext ctx) { return visitChildren(ctx); }
+	@Override public T visitQualifiedterm(@NotNull TescoFilterGrammarParser.QualifiedtermContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFilterset(@NotNull TescoFilterGrammarParser.FiltersetContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAtom(@NotNull TescoFilterGrammarParser.AtomContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

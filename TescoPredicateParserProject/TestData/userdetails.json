@@ -1,0 +1,136 @@
+{
+  "total": 1,
+  "missingSet": [],
+  "content": [
+    {
+      "id": "trn:tesco:uid:uuid:5558510d-6e7f-4ab7-855f-17c5b0dd65ff",
+      "userType": "Internal",
+      "role": "",
+      "isPartnerPrimaryContact": false,
+      "userStatus": "Active",
+      "userRoleArea": "",
+      "group": [
+        {
+          "id": "tradingpartner:usergrp:id:6294c7a9-e864-45ed-a821-cb0475fc1bd6",
+          "groupName": "Global_Buyer_Admin",
+          "parent": {
+            "id": "tradingpartner:usergrp:id:aa53b6cd-e0d7-4995-8178-2643a73d27af",
+            "groupName": "SuperUser"
+          },
+          "access": [
+            {
+              "id": "tradingpartner:access:id:27968cef-4f39-4376-9045-3f9ba7219a45",
+              "resources": {
+                "id": "tradingpartner:resource:id:689d0541-0f99-411a-b5ab-ab418f38dd55",
+                "resource": "/v1/usermanagement/userdetails",
+                "filters": [
+                  {
+                    "id": "tradingpartner:filter:id:89e44dd7-35f0-426d-a86a-f869773c8b0e",
+                    "property": "ALL",
+                    "value": "ALL"
+                  }
+                ],
+                "permissions": [
+                  {
+                    "id": "tradingpartner:permission:id:4e71dd39-d5f0-4af7-b14e-a1ae6b1cdcaa",
+                    "name": "ROLE_READ"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "tradingpartner:access:id:057a4b7c-16af-4b7d-93fb-04b648064b6a",
+              "resources": {
+                "id": "tradingpartner:resource:id:911c2582-3529-45b4-8983-a526ff2f52ba",
+                "resource": "/v1/usermanagement/userdetails/search",
+                "filters": [
+                  {
+                    "id": "tradingpartner:filter:id:89e44dd7-35f0-426d-a86a-f869773c8b0e",
+                    "property": "ALL",
+                    "value": "ALL"
+                  }
+                ],
+                "permissions": [
+                  {
+                    "id": "tradingpartner:permission:id:4e71dd39-d5f0-4af7-b14e-a1ae6b1cdcaa",
+                    "name": "ROLE_READ"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "tradingpartner:access:id:f42d26b4-f034-4544-8505-9ef9c2d660dd",
+              "resources": {
+                "id": "tradingpartner:resource:id:607a1dcc-cfc4-4187-8aff-24f2a2eeab38",
+                "resource": "/v1/tradingpartners",
+                "filters": [
+                  {
+                    "id": "tradingpartner:filter:id:89e44dd7-35f0-426d-a86a-f869773c8b0e",
+                    "property": "ALL",
+                    "value": "ALL"
+                  }
+                ],
+                "permissions": [
+                  {
+                    "id": "tradingpartner:permission:id:4e71dd39-d5f0-4af7-b14e-a1ae6b1cdcaa",
+                    "name": "ROLE_READ"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "tradingpartner:usergrp:id:bc9b0c24-b5db-4944-b7ac-6763310f8c12",
+          "groupName": "TK_Internal",
+          "parent": {
+            "id": "tradingpartner:usergrp:id:73ba26f2-8746-4d58-b1ca-34c2a7b5fce5",
+            "groupName": "Global_Toolkit_Admin"
+          },
+          "access": [
+            {
+              "id": "tradingpartner:access:id:5af9bc73-cba3-460e-9179-6d89159f8305",
+              "resources": {
+                "id": "tradingpartner:resource:id:37cfd132-c825-454a-b2e7-91191bb12928",
+                "resource": "ToolkitResources",
+                "filters": [
+                  {
+                    "id": "tradingpartner:filter:id:89e44dd7-35f0-426d-a86a-f869773c8b0e",
+                    "property": "ALL",
+                    "value": "ALL"
+                  }
+                ],
+                "permissions": [
+                  {
+                    "id": "tradingpartner:permission:id:4e71dd39-d5f0-4af7-b14e-a1ae6b1cdcaa",
+                    "name": "ROLE_READ"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "tradingpartner:access:id:27968cef-4f39-4376-9045-3f9ba7219a45",
+              "resources": {
+                "id": "tradingpartner:resource:id:689d0541-0f99-411a-b5ab-ab418f38dd55",
+                "resource": "/v1/usermanagement/userdetails",
+                "filters": [
+                  {
+                    "id": "tradingpartner:filter:id:89e44dd7-35f0-426d-a86a-f869773c8b0e",
+                    "property": "ALL",
+                    "value": "ALL"
+                  }
+                ],
+                "permissions": [
+                  {
+                    "id": "tradingpartner:permission:id:4e71dd39-d5f0-4af7-b14e-a1ae6b1cdcaa",
+                    "name": "ROLE_READ"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

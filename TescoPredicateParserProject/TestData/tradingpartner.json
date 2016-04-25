@@ -1,0 +1,60 @@
+“Tesco”: [
+	{
+  		"total": 1,
+  		"missingSet": [],
+  		"content": [
+    				{
+      						"createdDateTime": "2016-01-14T12:59:45Z",
+      						"modifiedDateTime": "2016-03-23T08:07:19Z",
+      						"createdBy": "TradingPartnerIL",
+      						"modifiedBy": "trn:tesco:uid:uuid:2b48b3bf-db23-414c-81a4-9216d6806a44",
+      						"deleted": false,
+      						"firstDeliveryDate": "2016-01-28",
+      						"uniqueKey": "trn:tesco:tradingpartner:uuid:8fe88802-ab42-42e2-ad2e-7d5b8e5df22c",
+      						"documentType": "TradingPartnerSupplier",
+      						"sourceSystemName": "QS",
+      						"partnerName": "SOUTH EAST TROPICAL IMPRTS LTD",
+      						"partnerStatus": "active",
+      						"commercialHierarchy": [
+        							{
+          								"divisionCode": "F",
+          								"departments": [
+            									{
+              										"departmentCode": "F1"
+            									}
+          								]
+        							}
+      						],
+      						"identifiers": [
+        						{
+          							"systemKey": "10000",
+          							"systemName": "QS"
+        						},
+        						{
+          							"systemKey": "1000012",
+          							"systemName": "TPS"
+        						}
+      						],
+      						"isSmallSupplier": true,
+      						"partnerPrivateLabels": [
+        						"B"
+      						],
+      						"isPartnerLocalSupplier": true
+    						}
+  		]
+  		“Contracts”: [
+			“ContractDetails”: [
+				{
+					“Price”: “501.00”,
+					“Description”: “Five Hundred and One”
+				}
+  			],
+			[
+				{
+					“Price”: “1000000.00”,
+					“Description”: “One Million”
+				}
+			]
+		]
+	}
+]
